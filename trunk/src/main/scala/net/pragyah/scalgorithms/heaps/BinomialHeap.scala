@@ -27,7 +27,7 @@ class BinomialHeap[A <% Ordered[A]](val aMin:A) extends Heap[A] {
       None
     
     var min = x.key
-    
+    y = x
     while (x != null) {
       if(x.key < min) {
         min = x.key
