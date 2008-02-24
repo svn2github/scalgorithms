@@ -66,5 +66,31 @@ class TestGraphBasicsUndirected extends TestCase{
     assert(graph.getEdge(v1,v4).get.weight == 14)
 
   }
-  
+
+  def testTranspose = {
+    val v1 = Vertex[int](1);
+    val v2 =  Vertex[int](2);
+    val v3 =  Vertex[int](3);
+    val v4 =  Vertex[int](4);
+    
+    val vertices:List[Vertex[int]] = v1 :: v2 :: v3 :: v4 ::  Nil 
+    val graph:Graph[int] = Graph(vertices,false)
+
+    graph.addEdge(v1,v2,9)
+    graph.addEdge(v2,v3,12)
+    graph.addEdge(v3,v4,6)
+    graph.addEdge(v4,v2,5)
+    graph.addEdge(v4,v1,14)
+
+    try{
+      graph.transpose(false)
+      assert(false, "Should have thrown an exception saying that the graph is not directed")
+    }catch {
+	     case ex:java.lang.IllegalArgumentException => //do nothing
+   	     case ex:java.lang.Exception  => assert(false," Some Exception : "+ex.getMessage())
+    }
+    
+    
+  }
+
 }
