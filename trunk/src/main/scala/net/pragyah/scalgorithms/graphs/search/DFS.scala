@@ -17,7 +17,7 @@ class DFS[A] {
   
     type tagClass = Tuple4[String,int,int,Option[Vertex[A]]] //color, discover-time, finish-time,parent
     var time = 0
-  
+    
     def dftree(graph:Graph[A],sortF:((Vertex[A],Vertex[A]) => Boolean)):List[Tree[Vertex[A]]] = {
       var sorted = graph.vertices.sort(sortF)
       sorted.foreach(u => if (u.tag.asInstanceOf[tagClass]._1 == "WHITE") dfsVisit(u))
