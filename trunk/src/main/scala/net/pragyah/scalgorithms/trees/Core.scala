@@ -24,6 +24,12 @@ class Node[A](val data:A){
        list.head
   }
   
+  def traversePreOrder[B](z: B)(f: (B, A) => B): B = {
+    val b = f(z,data)
+    children.foreach(_.traversePreOrder(b)(f))
+    b
+  }
+  
   def setParent(p:Node[A]) = parent = Some(p)
   
   override def toString() : String = {
