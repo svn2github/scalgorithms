@@ -19,6 +19,7 @@ object AllTests {
     suite.addTestSuite(classOf[TestPrimsAlgorithm])
     //Sorting
     suite.addTestSuite(classOf[TestQuickSort])
+    suite.addTestSuite(classOf[TestMergeSort])
 
     
     return suite
