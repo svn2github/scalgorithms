@@ -90,7 +90,8 @@ class Graph[A](val vertices:List[Vertex[A]],val directed:boolean) {
   
   def addEdge(from:Vertex[A],to:Vertex[A],weight:double){
     assume(vertices.exists(_ ==from) && vertices.exists(_ == to))
-    edges = new Edge(weight,from,to,directed,false)::edges
+    val edge = new Edge(weight,from,to,directed,false)
+    edges = edge::edges
   }
   
   def addEdge(from:Vertex[A],to:Vertex[A]){
