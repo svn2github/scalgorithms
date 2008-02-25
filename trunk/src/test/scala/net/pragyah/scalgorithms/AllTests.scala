@@ -1,18 +1,26 @@
 package net.pragyah.scalgorithms
 
+import net.pragyah.scalgorithms.sorting._
 import net.pragyah.scalgorithms.heaps._
+import net.pragyah.scalgorithms.dynamicprogramming._
 import net.pragyah.scalgorithms.graphs._
 import net.pragyah.scalgorithms.graphs.mst._
 import net.pragyah.scalgorithms.graphs.search._
-import net.pragyah.scalgorithms.sorting._
 
 object AllTests {
+  
+  def main(args:Array[String]):Unit = {
+    println("running tests")
+    junit.textui.TestRunner.run(suite);
+  }
   
   def suite : junit.framework.Test = {
     val suite = new junit.framework.TestSuite
     //Sorting
     suite.addTestSuite(classOf[TestQuickSort])
     suite.addTestSuite(classOf[TestMergeSort])
+    //DynamicProgramming
+    suite.addTestSuite(classOf[TestLongestCommonSubsequence])
     //Heaps
     suite.addTestSuite(classOf[TestBinomialHeap])
     suite.addTestSuite(classOf[TestFibonacciHeap])
