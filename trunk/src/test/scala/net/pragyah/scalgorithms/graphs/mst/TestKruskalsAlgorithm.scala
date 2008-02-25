@@ -21,7 +21,6 @@ class TestKruskalsAlgorithm extends TestCase{
                                                                if(z != a){
                                                                  val edge = graph.getEdge(z,a)
                                                                  assert(edge  != None) // verify that such an edge exists
-                                                                 println(edge.get)
                                                                  assert(solutionEdges.contains(edge.get))
                                                                  totalMSTWeight = totalMSTWeight+edge.get.weight
                                                                }

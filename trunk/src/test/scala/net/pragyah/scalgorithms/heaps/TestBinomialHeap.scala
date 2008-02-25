@@ -45,7 +45,7 @@ class TestBinomialHeap extends TestCase{
      try{
        heap.decreaseKey(98,100)
      }catch{
-	     case ex:java.lang.IllegalArgumentException => println("Got it")
+	     case ex:java.lang.IllegalArgumentException => assert(true) 
 	     case ex:java.lang.Exception  => assert(false," Some Exception : "+ex.getMessage())
      }
      
