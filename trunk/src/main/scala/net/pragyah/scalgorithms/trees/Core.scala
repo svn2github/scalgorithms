@@ -7,6 +7,7 @@ object Node{
 
 class Node[A](val data:A){
   
+   var degree:int = 0
    var parent:Option[Node[A]] = None
    var children:List[Node[A]] = List()
    
