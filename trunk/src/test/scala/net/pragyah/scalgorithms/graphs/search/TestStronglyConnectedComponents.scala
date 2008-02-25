@@ -12,8 +12,6 @@ class TestStronglyConnectedComponents extends TestCase{
     val (graph,component) =  sccGraphCLRS_Chap22
     val trees = new DFS().getStronglyConnectedComponents(graph)
     
-    println(" STRONGLY CONNECTED COMPONENTS " )
-    trees.foreach(println)
     assert(trees.length == 4)
     trees.foreach(tree => {
                     tree.root.traversePreOrder(tree.root.data)((z,a) => {
@@ -21,7 +19,6 @@ class TestStronglyConnectedComponents extends TestCase{
                                                  val (edgeTo,edgeFro) = (graph.getEdge(z,a),graph.getEdge(a,z))
                                                  assert(edgeTo != null || edgeFro != null, "No edge in between "+z+" and "+a +" in the graph") // verify that such an edge exists
                                                  assert(component(z) == component(a))
-                                                 println(component(z) +" -- "+z+","+a)
                                                  component(z)
                                                }
                                                a
