@@ -84,7 +84,11 @@ object Graph{
   }
 }
 
-class Graph[A](var vertices:List[Vertex[A]],val directed:boolean) {
+class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
+  
+  var vertices = v
+  
+  def _vertices = vertices
   
   var edges:List[Edge[A]] = List()
   
