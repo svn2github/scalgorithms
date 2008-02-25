@@ -63,7 +63,7 @@ class Edge[A](var weight:double, val v1:Vertex[A],val v2:Vertex[A],val directed:
   }
   
   override def equals(other:Any) = other match{
-  case that:Edge[A] => that.weight == this.weight && that.v1 == that.v1 && that.v2 == that.v2 && this.directed == that.directed
+  case that:Edge[A] => that.weight == this.weight && that.v1 == this.v1 && that.v2 == this.v2 && this.directed == that.directed
   case _ => false
   }
   
