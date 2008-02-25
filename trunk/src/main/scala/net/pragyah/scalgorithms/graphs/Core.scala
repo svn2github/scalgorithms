@@ -84,9 +84,18 @@ object Graph{
   }
 }
 
-class Graph[A](val vertices:List[Vertex[A]],val directed:boolean) {
+class Graph[A](var vertices:List[Vertex[A]],val directed:boolean) {
   
   var edges:List[Edge[A]] = List()
+  
+  def addVertex(v:Vertex[A]) = {
+    vertices = v::vertices
+  }
+
+  def addVertex(a:A) = {
+    vertices = new Vertex[A](a)::vertices
+  }
+
   
   def addEdge(from:Vertex[A],to:Vertex[A],weight:double){
     assume(vertices.exists(_ ==from) && vertices.exists(_ == to))
