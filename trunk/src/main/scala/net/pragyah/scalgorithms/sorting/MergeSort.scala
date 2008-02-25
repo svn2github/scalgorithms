@@ -15,8 +15,8 @@ class MergeSort[A <% Ordered[A]] extends SortingAlgorithm[A] {
     while(left != Nil || right != Nil){
       if(left == Nil){ ret = ret ::: right; right = Nil}
       else if(right == Nil){ret = ret ::: left; left = Nil}
-      else if(left.head < right.head) {ret = ret :::left.takeWhile(_ < right.head); left = left.dropWhile(_ < right.head)}
-      else {ret = ret :::right.takeWhile(_ < left.head); right = right.dropWhile(_ < left.head)}
+      else if(left.head < right.head) {ret = ret :::left.takeWhile(_ <= right.head); left = left.dropWhile(_ <= right.head)}
+      else {ret = ret :::right.takeWhile(_ <= left.head); right = right.dropWhile(_ <= left.head)}
     }
     ret
   }
