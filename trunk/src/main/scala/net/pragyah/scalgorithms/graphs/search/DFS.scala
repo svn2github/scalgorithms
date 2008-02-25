@@ -17,7 +17,7 @@ class DFS[A] {
   
     type tagClass = Tuple4[String,int,int,Option[Vertex[A]]] //color, discover-time, finish-time,parent
     var time = 0
-    
+
     def dftree(graph:Graph[A],sortF:((Vertex[A],Vertex[A]) => Boolean)):List[Tree[Vertex[A]]] = {
       var sorted = graph.vertices.sort(sortF)
       sorted.foreach(u => if (u.tag.asInstanceOf[tagClass]._1 == "WHITE") dfsVisit(u))
@@ -41,6 +41,25 @@ class DFS[A] {
 
     }
     
+    def topologicallySort(graph:Graph[A]) : List[Vertex[A]] = {
+      dftree(graph)
+      graph.vertices.sort((v1,v2) => {
+                                          v1.tag.asInstanceOf[tagClass]._3 > v2.tag.asInstanceOf[tagClass]._3 
+                                        });
+    }
+    
+    
+    def getStronglyConnectedComponents(graph:Graph[A]) :List[Tree[Vertex[A]]] = {
+      dftree(graph) // a round of depth first trevarsal 
+      val graphT = graph.transpose(true) // get the transpose maitaining the tags 
+  
+      graphT.vertices.foreach(v => {
+                          val vtag = v.tag.asInstanceOf[tagClass]
+                          v.tag = ("WHITE",vtag._2,vtag._3,None) // mark all vertices as WHITE again .. but maintain other tags
+                         })
+      dftree(graphT,(v1:Vertex[A],v2:Vertex[A])=> v1.tag.asInstanceOf[tagClass]._3 > v2.tag.asInstanceOf[tagClass]._3 ) 
+      // traverse the graph in depth-first scheme in decending order of finish-time (see tag)
+    }
     
     
     def dfsVisit(u:Vertex[A]):Unit = {
