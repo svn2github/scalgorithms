@@ -9,6 +9,7 @@ class TreeBasedDisjointSet[A] extends DisjointSet[A] {
   val sets = new HashSet[Tree[A]]();
   val map = new HashMap[A,Node[A]]();
 
+  
   def makeSet(x:A) = {
     val set = Tree(x)
     map += x -> set.root
