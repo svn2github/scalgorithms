@@ -22,7 +22,7 @@ class TestPrimsAlgorithm extends TestCase{
                                                                if(z != a){
                                                                  val edge = graph.getEdge(z,a)
                                                                  assert(edge  != None) // verify that such an edge exists
-                                                                 assert(solutionEdges.contains(edge.get))
+                                                                 assert(solutionEdges.contains(edge.get)," Edge between "+z.data + " & "+a.data+" should not appear in the solution")
                                                                  totalMSTWeight = totalMSTWeight+edge.get.weight
                                                                }
                                                                a

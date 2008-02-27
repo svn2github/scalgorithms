@@ -20,7 +20,7 @@ class TestDFS extends TestCase{
                                                if(z != a){
                                                  val edge = graph.getEdge(z,a)
                                                  assert(edge  != None) // verify that such an edge exists
-                                                 assert(solutionMap(z).contains(edge.get)," Edge between "+z.data + " & "+z.data+" should not appear in the solution")
+                                                 assert(solutionMap(z).contains(edge.get)," Edge between "+z.data + " & "+a.data+" should not appear in the solution")
                                                  solutionMap.update(z,solutionMap(z).remove(e =>e == edge.get))
                                                  if(solutionMap(z) == Nil){
                                                    solutionMap -= z

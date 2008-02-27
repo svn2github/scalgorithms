@@ -5,7 +5,7 @@ import scala.collection.mutable.HashMap
 import junit.framework.TestCase
 import junit.framework.Assert._
 
-class TestDijkstras extends TestCase{
+class TestDijkstrasAlgorithm extends TestCase{
   
   def testCLRSGraph = {
     var ssspAlgo = new DijkstrasAlgorithm[char]()
