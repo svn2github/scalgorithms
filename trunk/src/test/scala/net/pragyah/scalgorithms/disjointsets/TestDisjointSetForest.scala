@@ -3,10 +3,10 @@ package net.pragyah.scalgorithms.disjointsets
 import junit.framework.TestCase
 import junit.framework.Assert._
 
-class TestTreeBasedDisjointSet extends TestCase{
+class TestDisjointSetForest extends TestCase{
   
   def testStringSets = {
-    val ds = new TreeBasedDisjointSet[String]()
+    val ds = new DisjointSetForest[String]()
     
     ds.makeSet("VP3")
     ds.makeSet("BP")
