@@ -17,7 +17,7 @@ class TestStronglyConnectedComponents extends TestCase{
                     tree.root.traversePreOrder(tree.root.data)((z,a) => {
                                                if(z != a){
                                                  val (edgeTo,edgeFro) = (graph.getEdge(z,a),graph.getEdge(a,z))
-                                                 assert(edgeTo != null || edgeFro != null, "No edge in between "+z+" and "+a +" in the graph") // verify that such an edge exists
+                                                 assert(edgeTo != null || edgeFro != null, "No edge in between "+z.data+" and "+a.data +" in the graph") // verify that such an edge exists
                                                  assert(component(z) == component(a))
                                                  component(z)
                                                }
