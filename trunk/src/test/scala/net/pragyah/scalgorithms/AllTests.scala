@@ -6,6 +6,8 @@ import net.pragyah.scalgorithms.dynamicprogramming._
 import net.pragyah.scalgorithms.graphs._
 import net.pragyah.scalgorithms.graphs.mst._
 import net.pragyah.scalgorithms.graphs.search._
+import net.pragyah.scalgorithms.graphs.shortestpath.singlesource._
+import net.pragyah.scalgorithms.graphs.shortestpath.allpair._
 
 object AllTests {
   
@@ -35,6 +37,16 @@ object AllTests {
     suite.addTestSuite(classOf[TestDFS])
     suite.addTestSuite(classOf[TestTopolgicalSorting])
     suite.addTestSuite(classOf[TestStronglyConnectedComponents])
+    //Graphs-single-source shortest path
+    suite.addTestSuite(classOf[TestBellmanFordAlgorithm])
+    suite.addTestSuite(classOf[TestDAG_ShortestPath])
+    suite.addTestSuite(classOf[TestDijkstrasAlgorithm])
+    //Graphs-all-pair shortest path
+    suite.addTestSuite(classOf[TestDynamicProgrammingAlgorithm])
+    suite.addTestSuite(classOf[TestMatrixMultiplicationAlgorithm])
+    suite.addTestSuite(classOf[TestFloydWarshallAlgorithm])
+    suite.addTestSuite(classOf[TestJohnsonsAlgorithm])
+
 
     
     return suite
