@@ -47,8 +47,6 @@ object AllTests {
     suite.addTestSuite(classOf[TestFloydWarshallAlgorithm])
     suite.addTestSuite(classOf[TestJohnsonsAlgorithm])
 
-
-    
     return suite
   }
 }
