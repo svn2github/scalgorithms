@@ -10,6 +10,7 @@ class Node[A](val data:A){
    var degree:int = 0
    var parent:Option[Node[A]] = None
    var children:List[Node[A]] = List()
+   var tag:Any = null
    
   
   def setLeftChild(l:Node[A]) = children = l::children 
@@ -55,7 +56,6 @@ class Node[A](val data:A){
 object Tree{
   def apply[A](root:Node[A]) = new Tree(root)
   def apply[A](root:A) = new Tree(Node(root))
-
 }
 
 class Tree[A](var root:Node[A]){
