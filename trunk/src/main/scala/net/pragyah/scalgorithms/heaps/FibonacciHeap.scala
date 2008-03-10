@@ -17,6 +17,8 @@ class FibonacciHeap[A <% Ordered[A]](val aMin:A) extends Heap[A] {
    else None
   }
   
+  def empty = min == null
+  
   // insert a new element ... cost O(1)  (actual and amortized)
   def insert(a:A) = {
     val x = new Node[A](a)

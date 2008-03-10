@@ -15,6 +15,7 @@ class BinomialHeap[A <% Ordered[A]](val aMin:A) extends Heap[A] {
   
   val keyNodeMap = new HashMap[A,List[BHNode[A]]]()
 
+  def empty = head == null
   /*
    * min key should reside in a root node
    * since this method checks all roots ... which numbers at most lg n + 1 .... 
