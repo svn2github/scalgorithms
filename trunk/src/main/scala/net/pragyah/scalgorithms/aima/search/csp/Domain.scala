@@ -27,7 +27,6 @@ class Domain[X,V](val l:List[X]) {
     map.foreach(k => {
                  sb.append("\n").append(k._1).append(" -> ")
                  k._2.foreach(v => sb = sb.append(v).append(","))
-                 
                 })
     sb.toString
   }
