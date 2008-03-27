@@ -17,7 +17,7 @@ class Assignment[X,V](val vars:List[X]) {
   def -= (x:X) = map(x) = None
   def complete = !map.values.exists(_ == None)
   def has(x:X)  = map(x) != None
-  def unassigned = {
+  def unassigned:List[X] = {
    val clone = map.clone
    clone.retain((a,b) => b == None)
    clone.keySet.toList
