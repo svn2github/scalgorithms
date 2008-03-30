@@ -80,6 +80,7 @@ class CSP[X,V](val vars:List[X],val cons:List[Constraint[X,V]],val domain:Domain
    * If there are more than one such variables then take help of the problem-specific "degreeHeuristic" that should
    * return back a variable that is involved in the largest number of constraints on the other unassigned variables
    * 
+   * complexity O(n + that-of-degree-heuristic)
    */
   def mostConstrainedVariableHeuristic(degreeHeuristic:(List[X],Assignment[X,V],List[Constraint[X,V]]) => X)(assignment:Assignment[X,V],domain:Domain[X,V]) :X = {
       val unassigned = assignment.unassigned
