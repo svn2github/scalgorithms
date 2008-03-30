@@ -3,8 +3,13 @@ package net.pragyah.scalgorithms.aima.search.csp
 import junit.framework.TestCase
 import junit.framework.Assert._
 
-import scala.collection.mutable.{Set,Map}
+import scala.collection.mutable.{Map,Queue}
+import scala.collection.immutable.Set
 import scala.collection.jcl.TreeMap
+
+/*
+ * Test CSP with basic map coloring with no (or minimal) heuristics 
+ */
 
 class TestCSP_MapColoring  extends TestCase{
   
@@ -17,10 +22,10 @@ class TestCSP_MapColoring  extends TestCase{
   val T = "T"
 
   val vars = WA :: NT :: SA :: Q :: NSW :: V :: T :: Nil
-  val vals = Set[String]()
-  vals += "RED"
-  vals += "BLUE"
-  vals += "GREEN"
+  var vals = Set[String]()
+  vals = vals + "RED"
+  vals = vals + "BLUE"
+  vals = vals + "GREEN"
   
   val adjMatrix = Map[String,List[String]]()
   val waAdj = NT::SA::Nil
@@ -40,8 +45,8 @@ class TestCSP_MapColoring  extends TestCase{
   
   
   
-  val domain = Domain[String,String](vars)
-  vars.foreach(domain += (_,vals))
+  var domain = Domain[String,String](vars)
+  vars.foreach(v => domain = domain + (v,vals))
   
   def constraints:List[Constraint[String,String]] = {
     new MapConstraint() :: Nil
@@ -59,7 +64,7 @@ class TestCSP_MapColoring  extends TestCase{
     }
   }
 
-  def testMapColoring_NoHeuristic = {
+  def testMapColoring = {
     
     val csp = new CSP[String,String](vars,constraints,domain)
     val assignmentOpt = csp.backtrackingSearch
@@ -75,37 +80,5 @@ class TestCSP_MapColoring  extends TestCase{
                  })
     println(assignment)
   }
-  
-  
-  def testMapColoring_VariableSelectionHeuristic = {
-    
-    def degreeHeuristic(mcvs:List[String],assignment:Assignment[String,String],constraints:List[Constraint[String,String]]) : String = {
-      val unassigned = assignment.unassigned
-      var tm = new TreeMap[int,List[String]]()
-
-      mcvs.foreach(v => {
-                      var count = adjMatrix(v).filter(unassigned.contains(_)).size //not a very efficient way though
-                      if(!tm.contains(count)) tm += count -> List(v) else tm += count -> (v :: tm(count))
-                   }
-                   
-      )
-      tm(tm.keySet.toList.reverse.head).head
-    }
-
-    val csp = new CSP[String,String](vars,constraints,domain)
-    def varSelectHeuristic = csp.mostConstrainedVariableHeuristic(degreeHeuristic)_
-
-    val assignmentOpt = csp.backtrackingSearch(varSelectHeuristic,null,null,null)
-    assertNotNull(assignmentOpt)
-    assert(assignmentOpt != None)
-    val assignment = assignmentOpt.get
-    assertTrue(assignment.complete)
-    assert(assignment.vars == vars)
-    vars.foreach(x => {
-                   val v = assignment(x).get
-                   constraints.foreach(c => assert(c.satisfied(assignment,x,v)))
-                 })
-    println(assignment)
-    
-  }
+ 
 }
