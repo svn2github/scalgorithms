@@ -9,7 +9,7 @@ import scala.collection.jcl.TreeMap
 
 /*
  * This one makes the use of all the other heuristics (MRV+DegreeHeuristic + LeastConstrainingValueHeuristic + ForwardCheck)
- * Along with a strategy for constraint propagation - AC3
+ * Along with a strategy for constraint propagation - AC3  (ac3 is 2-consistency form  :  k-consistency -> k = 2)
  * ForwardCheck heuristic does not detect all the inconsistency because it does not look far enough ahead ... 
  * in that removal of values from the domains of two adjoining variables (of the current variable) may violate 
  * the constraints in which they participate with their adjoining variables respectively.
@@ -24,8 +24,13 @@ class TestCSP_ValVarFwdChkAC3Heuristic extends TestCSP_ValVarFwdChkHeuristic {
   /*
    * shake-shake-shake the domain to filterout the useless
    * values for each variable.
-   * 
+   * a binary CSP has at most O(n2 ) arcs; 
+   * each arc (Xk , Xi ) can be inserted on the agenda only d times, 
+   * because Xi has at most d values to delete; 
+   * checking consistency of an arc can be done in O(d2 ) time; 
+   * so the total worst-case time is O(n2.d3).
    */
+  
   def ac3(domain:Domain[String,String]):Domain[String,String] = {
     var d = domain
     val q = new Queue[(String,String)]();
@@ -34,18 +39,19 @@ class TestCSP_ValVarFwdChkAC3Heuristic extends TestCSP_ValVarFwdChkHeuristic {
                               adjMatrix(xi).foreach(q += (xi,_))
                             })
     
-    while(!q.isEmpty){  
+    while(!q.isEmpty){ // O(d.n2)
       val x = q.dequeue;// dequeu each edge and see if there is any inconsistancy in the first node/variable wrt to the second nod ...
       if(removeInconsistentValues(x._1,x._2)){ // if yes then 
         adjMatrix(x._1).foreach(q += (x._1,_)) // add this first-node with all the possible edges comming into it to the end of the queue ... 	
                                                // because a removal from its domain may spoil its relations with its adjoining variables
       }
     }
-    
+    // O(d2)
     def removeInconsistentValues(xi:String,xj:String):boolean = {
       var removed = false
-      d(xi).foreach(vi => 
-                             if(d(xj).filter(_ != vi).size == 0){ // check if there exists a color in the adjoining variable compatible with this color (vi) 
+      //total O(d2)
+      d(xi).foreach(vi => // O(d)
+                             if(d(xj).filter(_ != vi).size == 0){ // check if there exists a color in the adjoining variable compatible with this color (vi) .. O(d) 
                                d = d - (xi,vi); 
                                removed = true
                              }
