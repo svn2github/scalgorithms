@@ -1,0 +1,58 @@
+package net.pragyah.scalgorithms.aima.game
+
+import junit.framework.TestCase
+import junit.framework.Assert._
+
+class TestTicTacToe extends TestCase{
+  
+  def testInitialBoard = {
+    val ttt = new TicTacToe()
+    val is = ttt.initialState
+    
+    val isttt = is.asInstanceOf[TicTacToeState]
+    isttt.board.foreach(row => {
+                         row.foreach(cell => assert(cell == None)
+                         )
+                       })
+    
+    
+    isttt.successors.foreach(state => {
+                               println(state.toString())
+                             })
+    
+
+  }
+  
+  def testRandomBoard = {
+    val game:TicTacToe = new TicTacToe()
+    
+    val arr = new Array[Array[Option[String]]](3,3)
+    arr(0)(0) = Some("X")
+    arr(0)(1) = Some("X")
+    arr(0)(2) = Some("O")
+    
+    arr(1)(0) = None
+    arr(1)(1) = Some("X")
+    arr(1)(2) = None
+    
+    arr(2)(0) = None
+    arr(2)(1) = Some("O")
+    arr(2)(2) = None
+    
+    val tttState = new TicTacToeState(arr,TicTacToe.X)
+    
+    val utility = game.utility(tttState)
+    
+    val successors = tttState.successors
+    
+    
+    
+    successors.foreach(successor => (successor.asInstanceOf[TicTacToeState]).whoIsToAct == TicTacToe.Y)
+    successors.foreach(state => {
+                               println(state.toString())
+                               println(game.utility(state))
+                             })
+  }
+  
+
+}
