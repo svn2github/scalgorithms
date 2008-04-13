@@ -2,9 +2,21 @@ package net.pragyah.scalgorithms.aima.game
 
 object TicTacToe{
   val X = Player("X")
-  val Y = Player("Y")
+  val Y = Player("O")
   
   def getOther(player:Player) = if(player == X) Y else X
+  
+  def main(args:Array[String]):Unit = {
+    
+    val game:Game = new TicTacToe()
+    val is = game.initialState
+    
+    val a1 = game.maxDecision(is)
+    println(a1.from)
+    println(a1.to)
+  }
+  
+  
 }
 
 class TicTacToe extends Game{
@@ -26,6 +38,7 @@ class TicTacToe extends Game{
   
   def utility(state:State) : double = {
 
+    
     val board = state.asInstanceOf[TicTacToeState].board
     
     for(row <- 0 to 2){
@@ -38,30 +51,31 @@ class TicTacToe extends Game{
     for(col <- 0 to 2){
 	  if(board(0)(col) != None && board(1)(col) != None  && board(2)(col) != None
 	    && board(0)(col).get == board(1)(col).get && board(1)(col).get == board(2)(col).get ){
-	    if(board(0)(col).get == "X") 1 else -1
+	    if(board(0)(col).get == "X") return 1 else return -1
 	  }
     }
     
     if(board(0)(0) != None && board(1)(1) != None && board(2)(2) != None
       && board(0)(0).get == board(1)(1).get && board(1)(1).get == board(2)(2).get){
-	    if(board(1)(1) == "X") 1 else -1
+	    if(board(1)(1).get == "X") return 1 else return -1
     }
       
     if(board(2)(0) != None && board(1)(1) != None && board(0)(2) != None
       && board(2)(0).get == board(1)(1).get && board(1)(1).get == board(0)(2).get){
-	    if(board(1)(1) == "X") 1 else -1
+	    if(board(1)(1).get == "X") return 1 else return -1
     }
+    
+    board.foreach(row => row.foreach(col => {
+			      if(col ==None) 
+			        return -2 //the board is not completely populated yet .... but no one wins so far ... hence a non -1,0,1 utility
+         }
+    ))
     
     0
   }
   
   def terminalTest(state:State) : boolean = {
-    
-    
-    
-    
-    
-    false//TODO
+    utility(state) != -2
   }
 }
 
@@ -101,7 +115,7 @@ class TicTacToeState(val board:Array[Array[Option[String]]],val whoIsToAct:Playe
     clone
   }
   
-  private def getAsList() : List[Option[String]] = {
+  def getAsList() : List[Option[String]] = {
     var list = List[Option[String]]()
     for(i <- 0 to 2){
 		for(j <- 0 to 2){
@@ -110,6 +124,21 @@ class TicTacToeState(val board:Array[Array[Option[String]]],val whoIsToAct:Playe
 	}	
     list
   }
+  
+  def getAsString() : String = {
+    var sb = new StringBuilder()
+    
+    for(i <- 0 to 2){
+		for(j <- 0 to 2){
+		    if(board(i)(j) == None)
+              sb = sb.append("-")
+            else
+              sb = sb.append(board(i)(j).get)
+		}
+	}	
+    sb.toString
+  }
+  
   
   override def toString:String = {
     var sb = new StringBuffer
