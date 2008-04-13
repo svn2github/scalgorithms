@@ -6,17 +6,8 @@ import junit.framework.Assert._
 class TestAlphaBetaWithAIMAExample extends TestCase{
   
   
-  def testInitialBoard = {
-    
-    val game = new AIMASampleGame
-    game.maxDecisionAlphaBeta(game.A)
-    
-    
-    
 
-  }
-  
-  def testBoard = {
+  def testAIMAExample = {
     
     val game = new AIMASampleGame
     val action1:Action = game.maxDecisionAlphaBeta(game.A)
