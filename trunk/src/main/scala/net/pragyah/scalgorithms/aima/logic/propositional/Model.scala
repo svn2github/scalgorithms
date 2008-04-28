@@ -15,10 +15,10 @@ class Model {
     model
   }
   
-  def + (s:Symbol,v:TruthValue):Model = {
+  def + (kv:(Symbol,TruthValue)):Model = {
     val model = new Model();
     model.map ++= map
-    model.map += s -> Some(v)
+    model.map += kv._1 -> Some(kv._2)
     model
   }
 
