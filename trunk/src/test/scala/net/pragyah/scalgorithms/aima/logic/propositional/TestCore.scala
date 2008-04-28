@@ -104,7 +104,9 @@ class TestCore extends TestCase{
     val S = Symbol("S")
     val T = True()
     
-    val sentence1 = MultiSentence(V,P::Q::R::Nil)
+    val bSentence = BinarySentence(A,P,Q)
+    
+    val sentence1 = MultiSentence(V,bSentence::R::Nil)
     val sentence2 = MultiSentence(V,Q::R::S::Nil)
     val sentence3 = MultiSentence(V,R::S::T::Nil)
     
