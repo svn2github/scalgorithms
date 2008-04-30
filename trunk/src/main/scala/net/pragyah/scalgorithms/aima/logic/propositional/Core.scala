@@ -1,6 +1,7 @@
 package net.pragyah.scalgorithms.aima.logic.propositional
 
 import scala.collection.mutable.Set
+
 trait Sentence  {
   
   
@@ -80,10 +81,10 @@ class Symbol(val name:String) extends AtomicSentence{
 
 //Binary Sentence
 object BinarySentence{
-  def apply(opr:Operator,left:Sentence,right:Sentence) =  new BinarySentence(opr,left,right)
+  def apply[L <: Sentence,R <: Sentence](opr:Operator,left:L,right:R) =  new BinarySentence(opr,left,right)
 }
-class BinarySentence(val opr:Operator,val left:Sentence, val right:Sentence) extends ComplexSentence{
-  override def op = opr
+class BinarySentence[L <: Sentence,R <: Sentence](val op:Operator,val left:L, val right:R) extends ComplexSentence{
+  //override def op = opr
   override def sentences = left::right::Nil
   override def symbols = {
     var set = Set[Symbol]()
@@ -92,29 +93,41 @@ class BinarySentence(val opr:Operator,val left:Sentence, val right:Sentence) ext
     set.toList
   } 
   
-  override def toString = left+" "+opr+" "+right
+  override def toString = left+" "+op+" "+right
 }
 
 //Multi Sentence
 object MultiSentence{
-  def apply(opr:Operator,_sentences:List[Sentence]) =  new MultiSentence(opr,_sentences)
+  def apply[A <: Sentence](op:Operator,_sentences:List[A]) =  new MultiSentence(op,_sentences)
 }
-class MultiSentence(val opr:Operator,val _sentences:List[Sentence]) extends ComplexSentence{
-  override def op = opr
-  override def sentences = _sentences
+class MultiSentence[A <: Sentence](val op:Operator,val sentences:List[A]) extends ComplexSentence{
   override def symbols = {
     var set = Set[Symbol]()
-    _sentences.foldLeft[Set[Symbol]](set)((set,sentence) => set ++ sentence.symbols)
+    sentences.foldLeft[Set[Symbol]](set)((set,sentence) => set ++ sentence.symbols)
     set.toList
+  }
+  
+  override def toString = {
+    sentences.tail.foldLeft[String](sentences.head.toString)((str,sentence) => str + " "+op.toString+" "+sentence)
   }
 }
 
+//Horn Clause
+object HornClause{
+  def apply(body:List[Symbol],head:Symbol) = new HornClause(body,head)
+}
 
- // OPERATOR
+class HornClause(val body:List[Symbol],val head:Symbol) extends BinarySentence(Operator.==>,MultiSentence[Symbol](Operator.A,body),head){
+  def premiseSymbols = body
+  override def toString = super.toString
+}
+
+
+// OPERATOR
 
 object Operator{
-  final val A   = new Operator("A")
-  final val V   = new Operator("V")
+  final val A   = new Operator("&")
+  final val V   = new Operator("||")
   final val !   = new Operator("!"){
     
   }
