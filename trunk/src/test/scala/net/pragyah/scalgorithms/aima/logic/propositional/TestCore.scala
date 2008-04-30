@@ -128,5 +128,30 @@ class TestCore extends TestCase{
     assert(symbols.contains(S))
     
   }
+  
+  def testHornClause = {
+    val P = Symbol("P")
+    val Q = Symbol("Q")
+    val R = Symbol("R")
+    val S = Symbol("S")
+    
+    val hc = HornClause(P::Q::R::Nil,S)
+
+    assertEquals(hc.premiseSymbols.size,3)
+    assertTrue(hc.premiseSymbols.contains(P))
+    assertTrue(hc.premiseSymbols.contains(Q))
+    assertTrue(hc.premiseSymbols.contains(R))
+    assertEquals(hc.head,S)
+
+    assertEquals(hc.symbols.size,4)
+    assertTrue(hc.symbols.contains(P))
+    assertTrue(hc.symbols.contains(Q))
+    assertTrue(hc.symbols.contains(R))
+    assertTrue(hc.symbols.contains(S))
+    
+    
+    assertEquals(hc.op,Operator.==>)
+    
+  }
 
 }
