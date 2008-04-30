@@ -3,9 +3,9 @@ package net.pragyah.scalgorithms.aima.logic.propositional.inference
 import scala.collection.mutable.Set
 import Operator.A
 
-class Resolution extends InferenceAlgorithm{
+class Resolution extends InferenceAlgorithm[Sentence,Sentence]{
   
-    override def entails(kb:KnowledgeBase,alpha:Sentence) : boolean = {
+    override def entails(kb:KnowledgeBase[Sentence],alpha:Sentence) : boolean = {
       
       //clauses - the set of clauses in the CNF representation of KB A !alpha
       val clauses = getCNFClauses(BinarySentence(A,kb.asSentence, new !(alpha)))
