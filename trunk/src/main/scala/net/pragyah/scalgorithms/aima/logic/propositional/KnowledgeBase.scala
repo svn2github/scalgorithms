@@ -1,6 +1,6 @@
 package net.pragyah.scalgorithms.aima.logic.propositional
 
-import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,!,==>,<=>}
+import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,NOT,->,<->}
 
 import scala.collection.mutable.HashSet
 
@@ -21,7 +21,7 @@ class KnowledgeBase[A <: Sentence]{
   def tellFalse(symbol:Symbol) = falseList = symbol::falseList
   
   def asSentence:Sentence = {
-    new MultiSentence(A,sentences.toList);
+    new MultiSentence(A)(sentences.toList);
   }
   
   def trueSymbols = trueList

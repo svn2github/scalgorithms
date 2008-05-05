@@ -1,6 +1,6 @@
 package net.pragyah.scalgorithms.aima.logic.propositional
 
-import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,!,==>,<=>}
+import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,->,<->}
 
 import junit.framework.TestCase
 import junit.framework.Assert._
@@ -150,7 +150,49 @@ class TestCore extends TestCase{
     assertTrue(hc.symbols.contains(S))
     
     
-    assertEquals(hc.op,Operator.==>)
+    assertEquals(hc.op,Operator.->)
+    
+  }
+  
+  def testFlatten = {
+    val P = Symbol("P")
+    val Q = Symbol("Q")
+    val R = Symbol("R")
+    val S = Symbol("S")
+    
+    val pq = BinarySentence[Symbol,Symbol](A,P,Q)
+    val rs = BinarySentence[Symbol,Symbol](A,R,S)
+    val pqrs = BinarySentence[Sentence,Sentence](A,pq,rs)
+    var pqrsFlat = pqrs.flatten
+    assert(pqrsFlat.sentences.size == 4)
+    assert(pqrsFlat.op == A)
+    assert(pqrsFlat.sentences.contains(P))
+    assert(pqrsFlat.sentences.contains(Q))
+    assert(pqrsFlat.sentences.contains(R))
+    assert(pqrsFlat.sentences.contains(S))
+    
+    val pqr = MultiSentence[Sentence](A,P::Q::R::Nil)
+    val pqrs1 = BinarySentence[Sentence,Symbol](A,pqr,S)
+    var pqrs1Flat = pqrs1.flatten
+    assert(pqrs1Flat.sentences.size == 4)
+    assert(pqrs1Flat.op == A)
+    assert(pqrs1Flat.sentences.contains(P))
+    assert(pqrs1Flat.sentences.contains(Q))
+    assert(pqrs1Flat.sentences.contains(R))
+    assert(pqrs1Flat.sentences.contains(S))
+    
+    
+    val pqflat = pq.flatten
+    assert(pqflat == pq)
+    
+    val qr = BinarySentence[Symbol,Symbol](A,Q,R)
+    val sp = BinarySentence[Symbol,Symbol](A,S,P)
+    
+    val allPairs = MultiSentence[Sentence](A,pq::qr::rs::sp::Nil)
+	var allPairsFlat = allPairs.flatten
+ 
+    println(allPairsFlat)
+
     
   }
 

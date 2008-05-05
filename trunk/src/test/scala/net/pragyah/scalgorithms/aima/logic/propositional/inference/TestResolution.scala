@@ -5,10 +5,73 @@ import junit.framework.Assert._
 
 import scala.collection.mutable.Set
 
+import net.pragyah.scalgorithms.aima.logic.propositional.MultiSentence
+import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{V}
+import net.pragyah.scalgorithms.aima.logic.propositional.!
+
 class TestResolution extends TestCase{
   
   
-  
+  def testResolveNonEmpty = {
+    //Example from AIMA .. figure 7.13
+    val P12 = Symbol("P12")
+    val P21 = Symbol("P21")
+    val B11 = Symbol("B11")
+
+    val resolution = new Resolution();
+
+    val Ci = MultiSentence(V,!P21::B11::Nil)
+    val Cj = MultiSentence(V,!B11::P12::P21::Nil)
+    
+    //resolution.resolve
+    
+    var resolvents = resolution.resolve(Ci,Cj)
+    
+    assert(resolvents.size == 2)
+    assert(resolvents.filter(_.symbols.contains(B11)).toList.size == 1)
+    assert(resolvents.filter(_.symbols.contains(P21)).toList.size == 1)
+        resolvents.foreach(println)
+
+    val r1 = resolvents.filter(_.symbols.contains(B11)).toList.head
+    val r2 = resolvents.filter(_.symbols.contains(P21)).toList.head
+    assert(r1  != r2)
+    
+    assert(r1.isInstanceOf[MultiSentence[AtomicSentence]])
+    assert(r2.isInstanceOf[MultiSentence[AtomicSentence]])
+    
+    var r1Sentences =r1.asInstanceOf[MultiSentence[AtomicSentence]].sentences; 
+    assert(r1Sentences.contains(B11))
+    r1Sentences = r1Sentences.remove(_ == B11)
+    assert(r1Sentences.contains(P12))
+    r1Sentences = r1Sentences.remove(_ == P12)
+    assert(r1Sentences.head.isInstanceOf[![Symbol]])
+    assert(r1Sentences.head.asInstanceOf[![Symbol]].symbols.head == B11)
+    
+    var r2Sentences =r2.asInstanceOf[MultiSentence[AtomicSentence]].sentences; 
+    assert(r2Sentences.contains(P12))
+    r2Sentences = r2Sentences.remove(_ == P12)
+    assert(r2Sentences.contains(P21))
+    r2Sentences = r2Sentences.remove(_ == P21)
+    assert(r2Sentences.head.isInstanceOf[![Symbol]])
+    println(r2Sentences.head.asInstanceOf[![Symbol]].symbols.head)
+    assert(r2Sentences.head.asInstanceOf[![Symbol]].symbols.head == P21)
+
+     
+    
+  }
+
+  def testResolveEmpty = {
+    val P12 = Symbol("P12")
+    val  resolution = new Resolution();
+
+    val Ci = P12
+    val Cj =  !P12
+	val resolvents = resolution.resolve(Ci,Cj)
+
+    assert(resolvents.size == 1)
+    assert(resolvents.toList.head == EmptyClause())
+ 
+  }
   
   def testPairs =  {
     

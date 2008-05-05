@@ -22,7 +22,7 @@ class ForwardChaining extends InferenceAlgorithm[HornClause,Symbol]{
         // if it has been processed previously. This avoids redundant work. it also prevents infinite loops that could be 
         // caused by implications such as P => Q and Q => P
       val inferred = new HashMap[Symbol,boolean]();
-      kb.sentences.foreach(_.body.foreach(inferred(_) = false))
+      kb.sentences.foreach(_.symbols.foreach(inferred(_) = false))
       
       // a list of symbols, initially the symbols known to be true in KB
       //this keeps track of symbols known to be true but not yet "processed"
