@@ -6,13 +6,12 @@ import junit.framework.Assert._
 import scala.collection.mutable.Set
 
 import net.pragyah.scalgorithms.aima.logic.propositional.MultiSentence
-import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{V}
+import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,<->}
 import net.pragyah.scalgorithms.aima.logic.propositional.!
 
 class TestResolution extends TestCase{
-  
-  
-  def testResolveNonEmpty = {
+
+   def testResolveNonEmpty = {
     //Example from AIMA .. figure 7.13
     val P12 = Symbol("P12")
     val P21 = Symbol("P21")
@@ -41,23 +40,35 @@ class TestResolution extends TestCase{
     
     var r1Sentences =r1.asInstanceOf[MultiSentence[AtomicSentence]].sentences; 
     assert(r1Sentences.contains(B11))
-    r1Sentences = r1Sentences.remove(_ == B11)
     assert(r1Sentences.contains(P12))
-    r1Sentences = r1Sentences.remove(_ == P12)
-    assert(r1Sentences.head.isInstanceOf[![Symbol]])
-    assert(r1Sentences.head.asInstanceOf[![Symbol]].symbols.head == B11)
+    assert(r1Sentences.contains(!B11))
     
     var r2Sentences =r2.asInstanceOf[MultiSentence[AtomicSentence]].sentences; 
     assert(r2Sentences.contains(P12))
-    r2Sentences = r2Sentences.remove(_ == P12)
     assert(r2Sentences.contains(P21))
-    r2Sentences = r2Sentences.remove(_ == P21)
-    assert(r2Sentences.head.isInstanceOf[![Symbol]])
-    println(r2Sentences.head.asInstanceOf[![Symbol]].symbols.head)
-    assert(r2Sentences.head.asInstanceOf[![Symbol]].symbols.head == P21)
+    assert(r2Sentences.contains(!P21))
 
      
     
+  }
+
+  def testResolveNonEmpty2 = {
+    //Example from AIMA .. figure 7.13
+    val P12 = Symbol("P12")
+    val B11 = Symbol("B11")
+
+    val resolution = new Resolution();
+
+    val Ci = MultiSentence(V,!P12::B11::Nil)
+    val Cj = !B11
+    
+    //resolution.resolve
+    
+    var resolvents = resolution.resolve(Ci,Cj)
+    
+
+    assert(resolvents.size == 1)
+    assert(resolvents.toList.head == True())
   }
 
   def testResolveEmpty = {
@@ -104,6 +115,25 @@ class TestResolution extends TestCase{
     assertEquals(set.size,expected.size)
     assert(expected.subsetOf(set))
     assert(set.subsetOf(expected))
+  }
+  
+  
+  def testAlgorithm = {
+    
+    val B11 = Symbol("B11")
+    val P12 = Symbol("P12")
+    val P21 = Symbol("P21")
+    
+    val orSentence  = BinarySentence[Symbol,Symbol](V,P12,P21)
+    val biConditionalSentence = BinarySentence[Symbol,Sentence](<->,B11,orSentence)
+    val  kb = KnowledgeBase[Sentence]()
+    kb.tell(biConditionalSentence)
+    kb.tell(!B11)
+              
+    
+    val resolution = new Resolution();
+    assert(resolution.entails(kb,P12))       
+                       
   }
   
   

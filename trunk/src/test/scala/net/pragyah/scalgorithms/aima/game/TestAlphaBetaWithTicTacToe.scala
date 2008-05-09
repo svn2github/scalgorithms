@@ -10,7 +10,7 @@ class TestAlphaBetaWithTicTacToe extends TestCase{
   def testAIMAExample = {
     
     val game = new TicTacToe
-    val is = game.initialState.successors.tail.tail.head
+    val is = game.initialState.successors.reverse.head
     println(is)
     val a1:Action = game.minDecisionAlphaBeta(is)
     /*a1.from.*/

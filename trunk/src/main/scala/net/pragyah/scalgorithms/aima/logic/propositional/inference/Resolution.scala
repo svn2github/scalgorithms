@@ -1,6 +1,6 @@
 package net.pragyah.scalgorithms.aima.logic.propositional.inference
 
-import scala.collection.mutable.Set
+import scala.collection.immutable.Set
 import net.pragyah.scalgorithms.aima.logic.propositional.!
 import Operator.{A,V}
 
@@ -9,10 +9,10 @@ class Resolution extends InferenceAlgorithm[Sentence,Sentence]{
     override def entails(kb:KnowledgeBase[Sentence],alpha:Sentence) : boolean = {
       
       //clauses - the set of clauses in the CNF representation of KB A !alpha
-      val clauses = getCNFClauses(BinarySentence(A,kb.asSentence, !alpha))
-      var _new = Set[Sentence]()
+      var clauses = getCNFClauses(BinarySentence(A,kb.asSentence, !alpha))
       
       while(true){
+        var _new = Set[Sentence]()
         pairs[Sentence](clauses.toList).foreach(pair => {
           //get all the resolvants resulting from each pair of sentences 
           val resolvents:Set[Sentence] = resolve(pair._1,pair._2)
@@ -25,52 +25,86 @@ class Resolution extends InferenceAlgorithm[Sentence,Sentence]{
         // now .. if all the resolvents collected so far contain nothing new that is to be known ... which means 
         // that there is no further scope of getting an EmptyClause any further ... which means that KB A !alpha is 
         // satisfiable ... which means :) that KB |= alpha is not true afterall 
-          if(_new.subsetOf(clauses))
+        println()
+        clauses.foreach(s => _new = _new.excl(s))
+        
+        if(_new.size == 0)
             return false
 
           // if some new sentences/clauses are discovered... add them to the ResolutionClosure (clauses)
+          
           clauses ++= _new
+          
       }
       false
 
     }
     
-    
+
     def resolve(Ci:Sentence,Cj:Sentence):Set[Sentence] = {
       
-      var atomicSentences = List[AtomicSentence]()
+      var atomicSentences = scala.collection.immutable.Set[Sentence]() // Set ... for 'factoring'
       //if it's a complex sentence ... then get all the sentences out of it 
-      if(Ci.isInstanceOf[ComplexSentence[AtomicSentence]]){
-        assume(Ci.asInstanceOf[ComplexSentence[AtomicSentence]].op == Operator.V)
-        atomicSentences = Ci.asInstanceOf[ComplexSentence[AtomicSentence]].sentences ::: atomicSentences
-      }else{// if it's an atomic sentence .. then just add it
-        atomicSentences = Ci.asInstanceOf[AtomicSentence] :: atomicSentences 
+
+      Ci match {
+	      case ns: ![Sentence] =>{
+	        atomicSentences += ns
+          }
+	      case cs:ComplexSentence[AtomicSentence] =>{
+	        assume(cs.op == Operator.V)
+            if(cs.flatten == True())
+              return Set() // we don't need to send back anything ... 
+            else
+              atomicSentences ++=  cs.sentences
+            
+	      }
+	      case _ =>{// if it's an atomic sentence .. then just add it
+	        atomicSentences += Ci 
+	      }
       }
       
-      if(Cj.isInstanceOf[ComplexSentence[AtomicSentence]]){
-        assume(Cj.asInstanceOf[ComplexSentence[AtomicSentence]].op == Operator.V)
-        atomicSentences = Cj.asInstanceOf[ComplexSentence[AtomicSentence]].sentences ::: atomicSentences
-      }else{
-        atomicSentences = Cj.asInstanceOf[AtomicSentence] :: atomicSentences 
+      Cj match {
+	      case ns: ![Sentence] =>{
+	        atomicSentences += ns
+          }
+	      case cs:ComplexSentence[AtomicSentence] =>{
+	        assume(cs.op == Operator.V)
+            if(cs.flatten == True())
+              return Set() // we don't need to send back anything ... 
+            else
+              atomicSentences ++=  cs.sentences
+	      }
+	      case _ =>{// if it's an atomic sentence .. then just add it
+	        atomicSentences += Cj 
+	      }
       }
       
       var resolvents = Set[Sentence]()
       atomicSentences.filter( _.isInstanceOf[![Symbol]]).foreach(n =>{
-        var l = List[AtomicSentence]()
-        atomicSentences.filter(s => s != n && s != n.symbols.head).foldLeft[List[AtomicSentence]](l)((l1,s) => {l = s::l1;l})
-        if(l.size == 0)
-          resolvents += EmptyClause()
-        else if(l.size == 1)
-          resolvents += l.head
-        else
-          resolvents += MultiSentence[AtomicSentence](V,l)
+        var l = List[Sentence]()
+        atomicSentences.filter(s => s != n && s != n.symbols.head).foldLeft[List[Sentence]](l)((l1,s) => {l = s::l1;l})
+        if(l.size != atomicSentences.size -1)
+          {
+		    if(l.size == 0)
+		      resolvents += EmptyClause()
+		    else if(l.size == 1)
+		      resolvents += l.head
+		    else
+		      resolvents += MultiSentence[Sentence](V,l).flatten
+          }
        }
       )
       return resolvents
     }
     
     def getCNFClauses(sentence:Sentence):Set[Sentence] = {
-      Set(sentence)
+      val transformer = new CNFTransformer(sentence)
+      val cnfSentence = transformer.process
+      if(cnfSentence.isInstanceOf[ComplexSentence[Sentence]])
+        return Set[Sentence]() ++ cnfSentence.asInstanceOf[ComplexSentence[Sentence]].sentences
+      else{
+        Set(cnfSentence)
+      }
     }
     
     def  pairs[A](l:List[A]):Set[(A,A)] = {

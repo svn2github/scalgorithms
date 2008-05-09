@@ -9,6 +9,7 @@ import scala.collection.mutable.HashSet
 
 class TestCore extends TestCase{
   
+  
   def testTrue = {
     val sTrue = True();
     assert(sTrue.value)
@@ -44,6 +45,32 @@ class TestCore extends TestCase{
     assert(sentence.symbols.contains(l))
     assert(sentence.symbols.contains(r))
     
+    
+    val sentence2 = BinarySentence(V,r,l)
+    assert(sentence.equals(sentence2))
+    
+    val sentence3 = BinarySentence(V,l,l)
+    assert(!sentence.equals(sentence3))
+
+    val sentence4 = BinarySentence(A,r,l)
+    assert(!sentence.equals(sentence4))
+    
+    
+    val sentence5 = BinarySentence(->,l,r)
+    assertFalse(sentence.equals(sentence5))
+    
+    val sentence6 = BinarySentence(<->,l,r)
+    assertFalse(sentence.equals(sentence6))
+    
+    val sentence7 = BinarySentence(->,r,l)
+    assertFalse(sentence.equals(sentence7))
+    
+    val sentence8 = BinarySentence(<->,r,l)
+    assertFalse(sentence.equals(sentence8))
+    
+    
+    
+    
   }
 
   def testMultipleWithSymbols = {
@@ -64,6 +91,11 @@ class TestCore extends TestCase{
     assert(sentence.symbols.contains(P))
     assert(sentence.symbols.contains(Q))
     assert(sentence.symbols.contains(R))
+    
+    
+    assertEquals(MultiSentence(A,P::R::T::Q::Nil),sentence)
+    assert(!MultiSentence(V,P::R::T::Q::Nil).equals(sentence))
+    
     
     
     
@@ -163,7 +195,7 @@ class TestCore extends TestCase{
     val pq = BinarySentence[Symbol,Symbol](A,P,Q)
     val rs = BinarySentence[Symbol,Symbol](A,R,S)
     val pqrs = BinarySentence[Sentence,Sentence](A,pq,rs)
-    var pqrsFlat = pqrs.flatten
+    var pqrsFlat = pqrs.flatten.asInstanceOf[ComplexSentence[Sentence]]
     assert(pqrsFlat.sentences.size == 4)
     assert(pqrsFlat.op == A)
     assert(pqrsFlat.sentences.contains(P))
@@ -173,7 +205,7 @@ class TestCore extends TestCase{
     
     val pqr = MultiSentence[Sentence](A,P::Q::R::Nil)
     val pqrs1 = BinarySentence[Sentence,Symbol](A,pqr,S)
-    var pqrs1Flat = pqrs1.flatten
+    var pqrs1Flat = pqrs1.flatten.asInstanceOf[ComplexSentence[Sentence]]
     assert(pqrs1Flat.sentences.size == 4)
     assert(pqrs1Flat.op == A)
     assert(pqrs1Flat.sentences.contains(P))
@@ -195,5 +227,24 @@ class TestCore extends TestCase{
 
     
   }
+  
+  
+  def testNegationEquals = {
+    val S = Symbol("S")
+    
+    val s1 = !S
+    val s2 = !S
+    val bs = BinarySentence(V,S,s2)
+      
+    assert(s1.equals(s2))  
+    
+    var atomicSentences = Set[Sentence]() // Set ... for 'factoring'
+    atomicSentences ++= bs.sentences
+    atomicSentences +=s2
+    assert(atomicSentences.size == 2)
+    
+  }
+  
+  
 
 }

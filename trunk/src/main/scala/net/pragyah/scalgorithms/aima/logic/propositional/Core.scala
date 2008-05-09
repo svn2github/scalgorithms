@@ -17,7 +17,12 @@ trait Sentence  {
 */
   
   def symbols:List[Symbol]
-  def unary_! = new !(this)
+  def unary_! = {
+    if(this.isInstanceOf[![Sentence]])
+      this.asInstanceOf[![Sentence]].sentence
+    else
+        new !(this)
+  }
   
 }
 
@@ -31,15 +36,32 @@ trait ComplexSentence[A <: Sentence] extends Sentence{
   def op:Operator
   def sentences:List[A]
   
-  def flatten:ComplexSentence[A] = {
+  def flatten:Sentence = {
     var newSentences:List[A]= Nil
+    if(op == Operator.-> || op == Operator.<-> ){
+      return this
+    }
+    
     sentences.foreach(sentence =>
       if(sentence.isInstanceOf[ComplexSentence[Sentence]] && sentence.asInstanceOf[ComplexSentence[A]].op == op){
+        //TODO add recursive flattening here
         newSentences = newSentences ::: sentence.asInstanceOf[ComplexSentence[A]].sentences
       }else{
         newSentences = newSentences ::: List(sentence)
       })
-    if(newSentences.size > sentences.size)	return MultiSentence[A](op,newSentences.removeDuplicates)
+    
+    newSentences = newSentences.removeDuplicates
+    
+    if(op == Operator.A){
+      newSentences.foreach(s => if(newSentences.contains(!s)) return False())
+    }
+
+    if(op == Operator.V){
+      newSentences.foreach(s => if(newSentences.contains(!s)) return True())
+    }
+    
+    
+    if(newSentences.size > sentences.size)	return MultiSentence[A](op,newSentences)
     else return this
   }
 }
@@ -84,6 +106,7 @@ object Symbol{
 class Symbol(val name:String) extends AtomicSentence{
   override def symbols = this::Nil
   override def toString = name
+  override def equals(that:Any) = that.isInstanceOf[Symbol] && that.asInstanceOf[Symbol].name == name
 }
 
 
@@ -111,6 +134,21 @@ class BinarySentence[L <: Sentence,R <: Sentence](val op:Operator,val left:L, va
     
     leftStr+" "+op+" "+rightStr
   }
+  
+  override def equals(other:Any):boolean ={
+    if(!other.isInstanceOf[BinarySentence[L,R]]) return false
+    val that = other.asInstanceOf[BinarySentence[L,R]]
+    if(this.op != that.op) return false
+    op match{
+		case Operator.-> => return this.left.equals(that.left) && this.right.equals(that.right) 
+		case Operator.<-> => return this.left.equals(that.left) && this.right.equals(that.right)
+		case Operator.A => return (this.left.equals(that.left) && this.right.equals(that.right)) ||(this.left.equals(that.right) && this.right.equals(that.left)) 
+		case Operator.V => return (this.left.equals(that.left) && this.right.equals(that.right)) ||(this.left.equals(that.right) && this.right.equals(that.left)) 
+		case _ => false
+    }
+    
+  }
+  
 }
 
 //Multi Sentence
@@ -127,6 +165,16 @@ class MultiSentence[A <: Sentence](val op:Operator)(val sentences:List[A]) exten
     sentences.foldLeft[Set[Symbol]](set)((set,sentence) => set ++ sentence.symbols)
     set.toList
   }
+  
+  override def equals(other:Any):Boolean = {
+    if(!other.isInstanceOf[MultiSentence[A]]) return false
+    val that = other.asInstanceOf[MultiSentence[A]]
+    if(this.op != that.op) return false
+    if(this.sentences.size != this.sentences.size) return false 
+    if(this.sentences.diff((that.sentences)).size == 0 && that.sentences.diff((this.sentences)).size == 0) return true
+    return false
+  }
+  
   
   override def toString = {
     var firstStr = sentences.head.toString
@@ -151,7 +199,12 @@ class ![A <: Sentence](val sentence:A) extends ComplexSentence[A]{
   def op = Operator.NOT
   def symbols = sentence.symbols
   def sentences = sentence::Nil
-  override def equals(other:Any) =other.isInstanceOf[![A]] && other.asInstanceOf[![A]].sentence == sentence
+  override def equals(other:Any) = {
+    val b1 = other.isInstanceOf[![A]] 
+    var b2 = false
+    if(b1) b2 = other.asInstanceOf[![A]].sentence.equals(sentence)
+    b2
+  }
   override def toString = {
     var sentenceStr = sentence.toString
     if(!sentence.isInstanceOf[AtomicSentence]) sentenceStr = "("+sentenceStr+")"

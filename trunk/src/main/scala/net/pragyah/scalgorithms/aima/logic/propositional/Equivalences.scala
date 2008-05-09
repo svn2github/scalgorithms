@@ -4,9 +4,12 @@ import net.pragyah.scalgorithms.aima.logic.propositional.{!,ComplexSentence,Bina
 import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,->,<->}
 
 object Equivalences {
-   def applyDoubleNegationElimination(sentence: ![Sentence]):Sentence = {
-     assume(sentence.sentence.isInstanceOf[![Sentence]])
-     sentence.sentence.asInstanceOf[![Sentence]].sentence
+   def applyDoubleNegationElimination(sentence: Sentence):Sentence = {
+
+     if(sentence.isInstanceOf[![Sentence]] && sentence.asInstanceOf[![Sentence]].sentence.isInstanceOf[![Sentence]])
+       return      sentence.asInstanceOf[![Sentence]].sentence.asInstanceOf[![Sentence]].sentence
+     else
+         return sentence
      
    }
  
