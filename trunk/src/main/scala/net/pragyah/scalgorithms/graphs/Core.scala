@@ -46,7 +46,8 @@ object Edge{
 class Edge[A](var weight:double, val v1:Vertex[A],val v2:Vertex[A],val directed:boolean,var highlighted:boolean){
   
   directed match{
-  case true => v1.addEdge(this)
+    
+  case true => v1.addEdge(this) // add only to the parent node in case of a directed graph
   case false => v1.addEdge(this);v2.addEdge(this) 
   }
   
@@ -92,10 +93,20 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
   
   var edges:List[Edge[A]] = List()
   
+  def ++(v:Vertex[A]) = {
+    addVertex(v)
+  }
+  def ++(list:List[Vertex[A]]) = { list.foreach(addVertex(_))}
+  
   def addVertex(v:Vertex[A]) = {
     vertices = v::vertices
   }
 
+  def ++(a:A) = {
+    addVertex(a)
+  }
+
+  
   def addVertex(a:A) = {
     vertices = new Vertex[A](a)::vertices
   }
@@ -111,12 +122,14 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
     addEdge(from,to,0)
   }
   
-  def ::(from_to:(Vertex[A],Vertex[A])) {
+  def ::(from_to:(Vertex[A],Vertex[A])) = {
     addEdge(from_to._1,from_to._2)
+    this
   }
   
-  def ::(from_to_wt:(Vertex[A],Vertex[A],double)) {
+  def ::(from_to_wt:(Vertex[A],Vertex[A],double)) = {
     addEdge(from_to_wt._1,from_to_wt._2,from_to_wt._3)
+    this
   }
   
   def getEdge(from:Vertex[A],to:Vertex[A]): Option[Edge[A]] = {
