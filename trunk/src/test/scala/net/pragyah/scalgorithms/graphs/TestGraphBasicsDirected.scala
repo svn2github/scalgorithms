@@ -67,6 +67,15 @@ class TestGraphBasicsDirected extends TestCase{
 
     assert(graph.getEdge(v4,v1).get.weight == 14)
     assert(graph.getEdge(v1,v4).get.weight == 19)
+    
+    val edge = graph.getEdge(v1,v2)
+    assert(edge != None)
+    assert(v1.edges.contains(edge.get))
+    assert(!v2.edges.contains(edge))
+    graph.removeEdge(v1,v2)
+    assert(graph.getEdge(v1,v2) == None)
+    assert(!v1.edges.contains(edge))
+    
 
   }
   
