@@ -38,8 +38,8 @@ class TestBellmanFordAlgorithm extends TestCase{
       mstAlgo.getShortestPath(graph,s)
       assert(false,"should have thrown a java.lang.IllegalArgumentException stating that there is a Negative Weight Cycle")
     }catch{
-    case ex:java.lang.IllegalArgumentException => assert(true)
-    case ex:_ =>assert(false,"should have thrown a java.lang.IllegalArgumentException and not " +  ex.getClass.getName)
+    case ex:java.lang.AssertionError => assert(true)
+    case ex:java.lang.Throwable =>assert(false,"should have thrown a java.lang.AssertionError and not " +  ex.getClass.getName)
     }
 
   }
