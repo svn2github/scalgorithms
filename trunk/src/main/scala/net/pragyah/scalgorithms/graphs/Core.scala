@@ -8,11 +8,16 @@ object Vertex{
 }
 
 class Vertex[A](val data:A){
+  
   private[graphs] var edges:List[Edge[A]] = List()
   var tag:Any = None
   
   def addEdge(edge:Edge[A]) : Unit = {
     edges = edges ::: List(edge)
+  }
+  
+  def removeEdge(edge:Edge[A]) : Unit = {
+    edges = edges.remove(_ == edge)
   }
   
   def getEdges() : List[Edge[A]] = {
@@ -92,6 +97,9 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
   def _vertices = vertices
   
   var edges:List[Edge[A]] = List()
+//  def edges:List[Edge[A]] = edgeMap.values.toList
+  
+  var edgeMap = Map[Tuple2[Vertex[A],Vertex[A]],Edge[A]](); 
   
   def ++(v:Vertex[A]) = {
     addVertex(v)
@@ -116,7 +124,11 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
     assume(vertices.exists(_ ==from) && vertices.exists(_ == to))
     val edge = new Edge(weight,from,to,directed,false)
     edges = edge::edges
-  }
+/*    edgeMap = edgeMap + ((from,to) -> edge)
+    
+    if(!directed)
+      edgeMap = edgeMap + ((to,from) -> edge)
+*/  }
   
   def addEdge(from:Vertex[A],to:Vertex[A]){
     addEdge(from,to,0)
@@ -133,8 +145,29 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
   }
   
   def getEdge(from:Vertex[A],to:Vertex[A]): Option[Edge[A]] = {
+    
     edges.find(e => ((e.v1 == from && e.v2 == to) ||(!directed && e.v1 == to && e.v2 == from) ))
+    
+/*    val edge = edgeMap.get((from,to))
+    
+    if(edge == None & directed) return None
+    else return edgeMap.get((to,from))
+*/    
   }
+  //MOST OF THE CODE HERE IS INEFFICIENT... but works for now and that's what matters to me :) 
+  def removeEdge(from:Vertex[A],to:Vertex[A]){
+    val edgeOpt = edges.find(e => e.v1 == from && e.v2 == to)
+    if(edgeOpt == None) return;
+    val edge = edgeOpt.get
+    edge.vertices.foreach(_.removeEdge(edge))
+    edges = edges.remove(_ == edge)
+  }
+  
+  def removeEdge(fromTo:Tuple2[Vertex[A],Vertex[A]]){
+    removeEdge(fromTo._1,fromTo._2)
+  }
+  
+
   
   def transpose(withTag:boolean) : Graph[A] = {
     assume(directed,"Graph is not directed")
