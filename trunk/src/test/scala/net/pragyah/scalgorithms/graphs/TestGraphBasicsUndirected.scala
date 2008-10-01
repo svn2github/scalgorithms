@@ -87,6 +87,7 @@ class TestGraphBasicsUndirected extends TestCase{
       assert(false, "Should have thrown an exception saying that the graph is not directed")
     }catch {
 	     case ex:java.lang.IllegalArgumentException => //do nothing
+	     case ex:java.lang.AssertionError=> //do nothing
    	     case ex:java.lang.Exception  => assert(false," Some Exception : "+ex.getMessage())
     }
     
