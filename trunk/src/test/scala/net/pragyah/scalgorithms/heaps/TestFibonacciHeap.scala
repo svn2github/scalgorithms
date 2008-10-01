@@ -47,6 +47,7 @@ class TestFibonacciHeap extends TestCase{
        assert(false,"It should have thrown an exception 98 is less than 100")
      }catch{
 	     case ex:java.lang.IllegalArgumentException => //do nothing
+	     case ex:java.lang.AssertionError => //do nothing
 	     case ex:java.lang.Exception  => assert(false," Some Exception : "+ex.getMessage())
      }
      
