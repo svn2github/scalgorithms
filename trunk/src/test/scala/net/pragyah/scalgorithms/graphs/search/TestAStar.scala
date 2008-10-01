@@ -38,11 +38,11 @@ class TestAStar extends TestCase{
     graph.addEdge(vc,vg,100)
 
     val heuristics = new HashMap[Vertex[char],double]()
-    heuristics += vs -> 90
-    heuristics += va -> 100
-    heuristics += vb -> 88
-    heuristics += vc -> 100
-    heuristics += vg -> 0
+    heuristics += vs -> 90d
+    heuristics += va -> 100d
+    heuristics += vb -> 88d
+    heuristics += vc -> 100d
+    heuristics += vg -> 0d
     
     def goal(vu:Vertex[char]):boolean = vu == vg 
     def h(vu:Vertex[char]):double = heuristics(vu)
