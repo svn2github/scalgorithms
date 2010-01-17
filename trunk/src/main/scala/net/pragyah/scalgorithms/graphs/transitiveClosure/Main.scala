@@ -1,6 +1,6 @@
 package net.pragyah.scalgorithms.graphs.transitiveClosure
 
-import scala.compat.StringBuilder
+import scala.StringBuilder
 
 object Main {
   
