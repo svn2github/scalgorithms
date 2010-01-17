@@ -10,6 +10,7 @@ object Vertex{
 class Vertex[A](val data:A){
   
   private[graphs] var edges:List[Edge[A]] = List()
+  private[graphs] var _inEdges:List[Edge[A]] = List()
   var tag:Any = None
   
   def addEdge(edge:Edge[A]) : Unit = {
@@ -23,6 +24,11 @@ class Vertex[A](val data:A){
   def getEdges() : List[Edge[A]] = {
     edges
   }
+  
+  //TODO add test cases for INEDGES 
+  def inEdges = _inEdges
+  def addInboundEdge(edge:Edge[A]) = _inEdges = _inEdges ::: List(edge)
+
   
   def adjacent() : List[Vertex[A]] = {
     edges.flatMap(e => e.vertices.filter(_ != this))
@@ -50,9 +56,12 @@ object Edge{
 
 class Edge[A](var weight:double, val v1:Vertex[A],val v2:Vertex[A],val directed:boolean,var highlighted:boolean){
   
+  var tag:Any = None
+
+  
   directed match{
     
-  case true => v1.addEdge(this) // add only to the parent node in case of a directed graph
+  case true => v1.addEdge(this);v2.addInboundEdge(this) // add only to the parent node in case of a directed graph  //TODO add test case for inbound edge 
   case false => v1.addEdge(this);v2.addEdge(this) 
   }
   
@@ -91,6 +100,9 @@ object Graph{
 }
 
 class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
+
+  
+  val valVertexMap = scala.collection.mutable.Map[A,Vertex[A]]() //TODO .. this should not be exposed to the outer world
   
   var vertices = v
   
@@ -107,7 +119,10 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
   def ++(list:List[Vertex[A]]) = { list.foreach(addVertex(_))}
   
   def addVertex(v:Vertex[A]) = {
+    assume(valVertexMap.get(v.data) == None)
+    valVertexMap(v.data) = v 
     vertices = v::vertices
+    
   }
 
   def ++(a:A) = {
@@ -120,28 +135,31 @@ class Graph[A](val v:List[Vertex[A]],val directed:boolean) {
   }
 
   
-  def addEdge(from:Vertex[A],to:Vertex[A],weight:double){
+  def addEdge(from:Vertex[A],to:Vertex[A],weight:double):Edge[A] = {
     assume(vertices.exists(_ ==from) && vertices.exists(_ == to))
-    val edge = new Edge(weight,from,to,directed,false)
+    val edge = new Edge[A](weight,from,to,directed,false)
     edges = edge::edges
 /*    edgeMap = edgeMap + ((from,to) -> edge)
     
     if(!directed)
       edgeMap = edgeMap + ((to,from) -> edge)
-*/  }
-  
-  def addEdge(from:Vertex[A],to:Vertex[A]){
-    addEdge(from,to,0)
+*/	edge  
   }
   
-  def ::(from_to:(Vertex[A],Vertex[A])) = {
+  def addEdge(from:Vertex[A],to:Vertex[A]):Edge[A] = {
+    return addEdge(from,to,0)
+  }
+  
+  def ::(from_to:(Vertex[A],Vertex[A])):Edge[A] = {
     addEdge(from_to._1,from_to._2)
-    this
   }
   
-  def ::(from_to_wt:(Vertex[A],Vertex[A],double)) = {
+  def ::(from_to_wt:(Vertex[A],Vertex[A],double)):Edge[A] = {
     addEdge(from_to_wt._1,from_to_wt._2,from_to_wt._3)
-    this
+  }
+  
+  def vertex(data:A) : Option[Vertex[A]] = {
+    valVertexMap.get(data)
   }
   
   def getEdge(from:Vertex[A],to:Vertex[A]): Option[Edge[A]] = {
