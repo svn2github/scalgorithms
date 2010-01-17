@@ -1,7 +1,7 @@
 package net.pragyah.scalgorithms.aima.search.csp
 
 import scala.collection.mutable.HashMap
-import scala.compat.StringBuilder
+import scala.StringBuilder
 
 object Assignment{
    def apply[X,Y](vars:List[X]) = new Assignment[X,Y](vars) 

@@ -41,7 +41,7 @@ class CNFTransformer(val sentence:Sentence) {
 		        return deriveAV(Equivalences.applyDeMorgan(s.asInstanceOf[![ComplexSentence[Sentence]]]))
 		      }
 		      //now .. if it's a binarysentence with -> or --> operator ... just get the equivalent of the underlying sentence and run this through the recursive derive Equivalent again  
-		      case ss:_ => return deriveAV(!(deriveAV(ss)))
+		      case ss:Any => return deriveAV(!(deriveAV(ss)))
 		  }
 		}
         case s:MultiSentence[Sentence] =>{
@@ -63,7 +63,7 @@ class CNFTransformer(val sentence:Sentence) {
                   return deriveAV(Equivalences.applyDistributivityVoverA(s).flatten)
                 } 
               //for any other operator .... A or V .... derive equivalences of each of the left and right sub-sentences and return back a new BinarySentence
-		      case o:_ => return BinarySentence[Sentence,Sentence](o,deriveAV(s.left),deriveAV(s.right)).flatten 
+		      case o:Any => return BinarySentence[Sentence,Sentence](o,deriveAV(s.left),deriveAV(s.right)).flatten 
 		  }
 		   
 		} 

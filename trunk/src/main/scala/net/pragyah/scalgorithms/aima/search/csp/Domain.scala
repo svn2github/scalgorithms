@@ -2,7 +2,7 @@ package net.pragyah.scalgorithms.aima.search.csp
 
 import scala.collection.mutable.{Map,HashMap}
 import scala.collection.immutable.Set
-import scala.compat.StringBuilder
+import scala.StringBuilder
 
 object Domain{
   def apply[X,V](l:List[X]) = new Domain[X,V](l)
