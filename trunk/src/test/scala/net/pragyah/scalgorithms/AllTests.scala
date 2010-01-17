@@ -18,6 +18,7 @@ object AllTests {
   
   def suite : junit.framework.Test = {
     val suite = new junit.framework.TestSuite
+    suite.addTestSuite(classOf[TestGraphBasicsDirected])
     //Sorting
     suite.addTestSuite(classOf[TestQuickSort])
     suite.addTestSuite(classOf[TestMergeSort])
@@ -46,7 +47,6 @@ object AllTests {
     suite.addTestSuite(classOf[TestMatrixMultiplicationAlgorithm])
     suite.addTestSuite(classOf[TestFloydWarshallAlgorithm])
     suite.addTestSuite(classOf[TestJohnsonsAlgorithm])
-
     return suite
   }
 }
