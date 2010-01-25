@@ -9,7 +9,7 @@ import net.pragyah.scalgorithms.trees.Tree
  * A Greedy algorithm that computes shortest-paths on a 
  * weighted, directed graph with non-negative edge weights. 
  * Spreads the shortest-path tree like a cancer engulfing
- * the closest vertices first. Works like Prim’s MST algorithm.
+ * the closest vertices first. Works like Prim's MST algorithm.
  * 
  * Running Time = THETA (V lg V + E) Using Fibonnaci Heaps
  * 

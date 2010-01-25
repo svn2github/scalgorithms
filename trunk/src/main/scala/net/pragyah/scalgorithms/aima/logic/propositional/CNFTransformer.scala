@@ -1,6 +1,5 @@
 package net.pragyah.scalgorithms.aima.logic.propositional
 
-import net.pragyah.scalgorithms.aima.logic.propositional.{!,ComplexSentence,BinarySentence}
 import net.pragyah.scalgorithms.aima.logic.propositional.Operator.{A,V,->,<->}
   
 class CNFTransformer(val sentence:Sentence) {

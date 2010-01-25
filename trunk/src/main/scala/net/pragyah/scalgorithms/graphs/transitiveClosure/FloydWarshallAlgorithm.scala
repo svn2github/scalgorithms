@@ -2,7 +2,7 @@ package net.pragyah.scalgorithms.graphs.transitiveClosure
 
 /*Compute tij =  1 if there exists a path from i to j,  0 otherwise.
  * Use Floyd-Warshall, but with(OR,AND)instead  of(min, +):
- * tij(k) = tij(k–1) OR (tik(k–1) AND tkj(k–1)). 
+ * tij(k) = tij(k1) OR (tik(k1) AND tkj(k1)). 
  * Running Time THETA (V3)
 */
 class FloydWarshallAlgorithm[A] extends TransitiveClosureAlgorithm[A] {
